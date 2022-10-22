@@ -18,7 +18,7 @@ steps:
       nightly_host:
         from_secret: nightly_host
     commands:
-      - cd package-dir
+      - cd /package-dir
       - wget https://developer.joomla.org/nightlies/Joomla_4.3.0-dev-Development-Full_Package.zip
       - wget https://developer.joomla.org/nightlies/Joomla_5.0.0-dev-Development-Full_Package.zip
 
