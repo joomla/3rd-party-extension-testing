@@ -8,46 +8,39 @@ steps:
   - name: download
     image: joomlaprojects/docker-images:packager
     volumes:
-      - name: package-dir
+      - name: packagedir
         path: /packagedir
-    environment:
-      nightly_key:
-        from_secret: nightly_key
-      nightly_user:
-        from_secret: nightly_user
-      nightly_host:
-        from_secret: nightly_host
     commands:
-      - cd /package-dir
+      - cd /packagedir
       - wget https://developer.joomla.org/nightlies/Joomla_4.3.0-dev-Development-Full_Package.zip
       - wget https://developer.joomla.org/nightlies/Joomla_5.0.0-dev-Development-Full_Package.zip
 
   - name: extract
     image: joomlaprojects/docker-images:packager
     volumes:
-      - name: install-dir
-        path: /install-dir
-      - name: package-dir
+      - name: installdir
+        path: /installdir
+      - name: packagedir
         path: /packagedir
     commands:
-      - unzip /package-dir/Joomla_4.3.0-dev-Development-Full_Package.zip -d /install-dir/4.3.0
+      - unzip /packagedir/Joomla_4.3.0-dev-Development-Full_Package.zip -d /installdir/4.3.0
 
   - name: test-dpcalendar
     image: joomlaprojects/docker-images:cypress
     volumes:
-      - name: install-dir
-        path: /install-dir
+      - name: installdir
+        path: /installdir
     environment:
       JOOMLA_INSTALLATION_DISABLE_LOCALHOST_CHECK: 1
     commands:
-      - php /install-dir/4.3.0/installation/joomla.php install --site-name=extension-test --admin-user=john --admin-username=john-ext --admin-password=lalalal123lalala --admin-email=john@example.com --db-type=MySQLi --db-host=mysql --db-user=joomla_ut --db-pass=joomla_ut --db-name=test_joomla --db-prefix=et4
+      - php /installdir/4.3.0/installation/joomla.php install --site-name=extension-test --admin-user=john --admin-username=john-ext --admin-password=lalalal123lalala --admin-email=john@example.com --db-type=MySQLi --db-host=mysql --db-user=joomla_ut --db-pass=joomla_ut --db-name=test_joomla --db-prefix=et4
 
 volumes:
-  - name: install-dir
+  - name: installdir
     host:
       path: /tmp/et-install-dir
 
-  - name: package-dir
+  - name: packagedir
     host:
       path: /tmp/et-package-dir
 
