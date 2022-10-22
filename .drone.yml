@@ -29,13 +29,15 @@ steps:
   - name: mysql-healthcheck
       image: mysql:5.7
       commands:
-        - while ! mysqladmin ping -h mysql-server -u joomla_ut -pjoomla_ut --silent; do sleep 1; done
+        - while ! mysqladmin ping -h mysql -u joomla_ut -pjoomla_ut --silent; do sleep 1; done
 
   - name: test-dpcalendar
     image: joomlaprojects/docker-images:cypress
     volumes:
       - name: installdir
         path: /installdir
+      - name: packagedir
+        path: /packagedir
     environment:
       JOOMLA_INSTALLATION_DISABLE_LOCALHOST_CHECK: 1
     commands:
