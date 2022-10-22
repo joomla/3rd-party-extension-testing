@@ -45,7 +45,7 @@ steps:
       - cd /packagedir
       - wget -i extensions/dpcalendar/url.txt -O dpcalendar.zip
       - cd ..
-      - php /installdir/4.3.0/cli/joomla.php extension:install /packagedir/dpcalendar.zip
+      - php /installdir/4.3.0/cli/joomla.php extension:install --path /packagedir/dpcalendar.zip --verbose  --version --no-interaction
 
 volumes:
   - name: installdir
