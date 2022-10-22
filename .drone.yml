@@ -26,10 +26,10 @@ steps:
       - rm -rf /installdir/4.3.0
       - unzip /packagedir/Joomla_4.3.0-dev-Development-Full_Package.zip -d /installdir/4.3.0
 
-  - name: mysql-healthcheck
-      image: mysql:5.7
-      commands:
-        - while ! mysqladmin ping -h mysql -u joomla_ut -pjoomla_ut --silent; do sleep 1; done
+  - name: mysqlhealthcheck
+    image: mysql:5.7
+    commands:
+      - while ! mysqladmin ping -h mysql -u joomla_ut -pjoomla_ut --silent; do sleep 1; done
 
   - name: test-dpcalendar
     image: joomlaprojects/docker-images:cypress
