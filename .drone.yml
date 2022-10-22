@@ -7,6 +7,9 @@ clone:
 steps:
   - name: download
     image: joomlaprojects/docker-images:packager
+    volumes:
+      - name: package-dir
+        path: /packagedir
     environment:
       nightly_key:
         from_secret: nightly_key
@@ -22,16 +25,22 @@ steps:
       - chmod 600 ~/.ssh/id_rsa
       - ssh-add
       - rclone config create nightly sftp host $nightly_host user $nightly_user port 22
-      - rclone copy nightly:/home/devj/public_html/nightlies/Joomla_4.3.0-dev-Development-Full_Package.zip ./Joomla-Packages --progress
-      - rclone copy nightly:/home/devj/public_html/nightlies/Joomla_5.0.0-dev-Development-Full_Package.zip ./Joomla-Packages --progress
+      - rclone copy nightly:/home/devj/public_html/nightlies/Joomla_4.3.0-dev-Development-Full_Package.zip /packagedir --progress
+      - rclone copy nightly:/home/devj/public_html/nightlies/Joomla_5.0.0-dev-Development-Full_Package.zip /packagedir --progress
 
   - name: extract
     image: joomlaprojects/docker-images:packager
+    volumes:
+      - name: install-dir
+        path: /install-dir
     commands:
-      - unzip ./Joomla-Packages/Joomla_4.3.0-dev-Development-Full_Package.zip -d /install-dir/4.3.0
+      - unzip /packagedir/Joomla_4.3.0-dev-Development-Full_Package.zip -d /install-dir/4.3.0
 
   - name: test-dpcalendar
     image: joomlaprojects/docker-images:cypress
+    volumes:
+      - name: install-dir
+        path: /install-dir
     environment:
       JOOMLA_INSTALLATION_DISABLE_LOCALHOST_CHECK: 1
     commands:
@@ -41,6 +50,11 @@ volumes:
   - name: install-dir
     host:
       path: /tmp/et-install-dir
+
+  - name: package-dir
+    host:
+      path: /tmp/et-package-dir
+
 
 services:
   - name: mysql
