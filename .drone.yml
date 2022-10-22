@@ -43,7 +43,7 @@ steps:
     commands:
       - php /installdir/4.3.0/installation/joomla.php install --site-name=extension-test --admin-user=john --admin-username=john-ext --admin-password=lalalal123lalala --admin-email=john@example.com --db-type=mysqli --db-host=mysql --db-user=joomla_ut --db-pass=joomla_ut --db-name=test_joomla --db-prefix=et4_
       - cd /packagedir
-      - wget -i ~/extensions/dpcalendar/url.txt -O dpcalendar.zip
+      - wget -i extensions/dpcalendar/url.txt -O dpcalendar.zip
       - cd ..
       - php /installdir/4.3.0/cli/joomla.php extension:install /packagedir/dpcalendar.zip
 
