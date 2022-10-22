@@ -22,8 +22,8 @@ steps:
       - chmod 600 ~/.ssh/id_rsa
       - ssh-add
       - rclone config create nightly sftp host $nightly_host user $nightly_user port 22
-      - rclone copy nightly:/home/devj/public_html/nightlies/Joomla_4.3.0-dev-Development-Full_Package.zip ./Joomla-Packages
-      - rclone copy nightly:/home/devj/public_html/nightlies/Joomla_5.0.0-dev-Development-Full_Package.zip ./Joomla-Packages
+      - rclone copy nightly:/home/devj/public_html/nightlies/Joomla_4.3.0-dev-Development-Full_Package.zip ./Joomla-Packages --progress
+      - rclone copy nightly:/home/devj/public_html/nightlies/Joomla_5.0.0-dev-Development-Full_Package.zip ./Joomla-Packages --progress
 
   - name: extract
     image: joomlaprojects/docker-images:packager
