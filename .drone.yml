@@ -35,7 +35,9 @@ steps:
       JOOMLA_INSTALLATION_DISABLE_LOCALHOST_CHECK: 1
     commands:
       - php /installdir/4.3.0/installation/joomla.php install --site-name=extension-test --admin-user=john --admin-username=john-ext --admin-password=lalalal123lalala --admin-email=john@example.com --db-type=mysqli --db-host=mysql --db-user=joomla_ut --db-pass=joomla_ut --db-name=test_joomla --db-prefix=et4_
-
+      - wget -i ~/extensions/dpcalendar/url.txt -O /packagedir/dpcalendar.zip
+      - php /installdir/4.3.0/cli/joomla.php extension:install /packagedir/dpcalendar.zip
+      
 volumes:
   - name: installdir
     host:
