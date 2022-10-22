@@ -18,7 +18,7 @@ steps:
       nightly_host:
         from_secret: nightly_host
     commands:
-      - cd packagedir
+      - cd package-dir
       - wget https://developer.joomla.org/nightlies/Joomla_4.3.0-dev-Development-Full_Package.zip
       - wget https://developer.joomla.org/nightlies/Joomla_5.0.0-dev-Development-Full_Package.zip
 
@@ -30,7 +30,7 @@ steps:
       - name: package-dir
         path: /packagedir
     commands:
-      - unzip /packagedir/Joomla_4.3.0-dev-Development-Full_Package.zip -d /install-dir/4.3.0
+      - unzip /package-dir/Joomla_4.3.0-dev-Development-Full_Package.zip -d /install-dir/4.3.0
 
   - name: test-dpcalendar
     image: joomlaprojects/docker-images:cypress
