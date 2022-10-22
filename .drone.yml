@@ -17,6 +17,7 @@ steps:
 
   - name: extract
     image: joomlaprojects/docker-images:packager
+    depends_on: [ download ]
     volumes:
       - name: installdir
         path: /installdir
@@ -26,13 +27,26 @@ steps:
       - rm -rf /installdir/4.3.0
       - unzip /packagedir/Joomla_4.3.0-dev-Development-Full_Package.zip -d /installdir/4.3.0
 
+  - name: npm
+    image: node:16-bullseye-slim
+    depends_on: [ extract ]
+    volumes:
+      - name: npm-cache
+        path: /tmp/npm-cache
+    environment:
+      npm_config_cache: /tmp/npm-cache
+    commands:
+      - npm ci --unsafe-perm
+
   - name: mysqlhealthcheck
     image: mysql:5.7
+    depends_on: [ n ]
     commands:
       - while ! mysqladmin ping -h mysql -u joomla_ut -pjoomla_ut --silent; do sleep 1; done
 
   - name: test-dpcalendar
     image: joomlaprojects/docker-images:cypress
+    depends_on: [ npm ]
     volumes:
       - name: installdir
         path: /installdir

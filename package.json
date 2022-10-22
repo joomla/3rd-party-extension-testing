@@ -1,0 +1,26 @@
+{
+  "name": "3rd-party-extension-testing",
+  "version": "0.0.1",
+  "description": "Extension testing for Joomla",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joomla/3rd-party-extension-testing.git"
+  },
+  "keywords": [
+    "Joomla",
+    "testing"
+  ],
+  "author": "Robert Deutz",
+  "license": "GPL-2.0-or-later",
+  "bugs": {
+    "url": "https://github.com/joomla/3rd-party-extension-testing/issues"
+  },
+  "homepage": "https://github.com/joomla/3rd-party-extension-testing#readme",
+  "devDependencies": {
+    "cypress": "^10.10.0"
+  }
+}
