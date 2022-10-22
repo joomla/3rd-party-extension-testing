@@ -1,0 +1,51 @@
+---
+kind: pipeline
+name: testing
+
+clone:
+
+steps:
+  - name: download
+    image: joomlaprojects/docker-images:packager
+    environment:
+      nightly_key:
+        from_secret: nightly_key
+      nightly_user:
+        from_secret: nightly_user
+      nightly_host:
+        from_secret: nightly_host
+    commands:
+      - mkdir -p ~/.ssh
+      - eval $(ssh-agent -s)
+      - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+      - echo "$nightly_key" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - ssh-add
+      - rclone config create nightly sftp host $nightly_host user $nightly_user port 22
+      - rclone copy nightly:/home/devj/public_html/nightlies/Joomla_4.3.0-dev-Development-Full_Package.zip ./Joomla-Packages
+      - rclone copy nightly:/home/devj/public_html/nightlies/Joomla_5.0.0-dev-Development-Full_Package.zip ./Joomla-Packages
+      - ls -l ./Joomla-Packages/*
+
+
+volumes:
+  - name: extension-cache
+    host:
+      path: /tmp/extension-cache
+
+services:
+  - name: mysql
+    image: mysql:5.7
+    environment:
+      MYSQL_USER: joomla_ut
+      MYSQL_PASSWORD: joomla_ut
+      MYSQL_ROOT_PASSWORD: joomla_ut
+      MYSQL_DATABASE: test_joomla
+
+
+trigger:
+  event:
+    - cron
+    - custom
+  repo:
+    - joomla/3rd-party-extension-testing
+
