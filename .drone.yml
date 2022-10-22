@@ -18,15 +18,9 @@ steps:
       nightly_host:
         from_secret: nightly_host
     commands:
-      - mkdir -p ~/.ssh
-      - eval $(ssh-agent -s)
-      - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-      - echo "$nightly_key" > ~/.ssh/id_rsa
-      - chmod 600 ~/.ssh/id_rsa
-      - ssh-add
-      - rclone config create nightly sftp host $nightly_host user $nightly_user port 22
-      - rclone copy nightly:/home/devj/public_html/nightlies/Joomla_4.3.0-dev-Development-Full_Package.zip /packagedir --progress
-      - rclone copy nightly:/home/devj/public_html/nightlies/Joomla_5.0.0-dev-Development-Full_Package.zip /packagedir --progress
+      - cd packagedir
+      - wget https://developer.joomla.org/nightlies/Joomla_4.3.0-dev-Development-Full_Package.zip
+      - wget https://developer.joomla.org/nightlies/Joomla_5.0.0-dev-Development-Full_Package.zip
 
   - name: extract
     image: joomlaprojects/docker-images:packager
