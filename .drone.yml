@@ -23,6 +23,7 @@ steps:
       - name: packagedir
         path: /packagedir
     commands:
+      - rm -rf /installdir/4.3.0
       - unzip /packagedir/Joomla_4.3.0-dev-Development-Full_Package.zip -d /installdir/4.3.0
 
   - name: test-dpcalendar
