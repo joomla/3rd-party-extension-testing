@@ -22,15 +22,23 @@ steps:
       - chmod 600 ~/.ssh/id_rsa
       - ssh-add
       - rclone config create nightly sftp host $nightly_host user $nightly_user port 22
-      - rclone -vv copy nightly:/home/devj/public_html/nightlies/Joomla_4.3.0-dev-Development-Full_Package.zip ./Joomla-Packages
+      - rclone copy nightly:/home/devj/public_html/nightlies/Joomla_4.3.0-dev-Development-Full_Package.zip ./Joomla-Packages
       - rclone copy nightly:/home/devj/public_html/nightlies/Joomla_5.0.0-dev-Development-Full_Package.zip ./Joomla-Packages
-      - ls -l ./Joomla-Packages/*
+
+  - name: extract
+    image: joomlaprojects/docker-images:packager
+    commands:
+      - unzip ./Joomla-Packages/Joomla_4.3.0-dev-Development-Full_Package.zip 4.3.0
+      - unzip ./Joomla-Packages/Joomla_5.0.0-dev-Development-Full_Package.zip 5.0.0
+
+  -name: test-dpcalendar
+    image: joomlaprojects/docker-images:cypress
+    environment:
+      JOOMLA_INSTALLATION_DISABLE_LOCALHOST_CHECK: 1
+    commands:
+      - bash php 4.3.0/installation/joomla.php install --site-name=extension-test --admin-user=john --admin-username=john-ext --admin-password=lalalal123 --admin-email=john@example.com --db-type=MySQLi --db-host=mysql --db-user=joomla_ut --db-pass=joomla_ut --db-name=test_joomla --db-prefix=et4
 
 
-volumes:
-  - name: extension-cache
-    host:
-      path: /tmp/extension-cache
 
 services:
   - name: mysql
@@ -40,12 +48,3 @@ services:
       MYSQL_PASSWORD: joomla_ut
       MYSQL_ROOT_PASSWORD: joomla_ut
       MYSQL_DATABASE: test_joomla
-
-
-trigger:
-  event:
-    - cron
-    - custom
-  repo:
-    - joomla/3rd-party-extension-testing
-
