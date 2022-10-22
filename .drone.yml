@@ -28,17 +28,19 @@ steps:
   - name: extract
     image: joomlaprojects/docker-images:packager
     commands:
-      - unzip ./Joomla-Packages/Joomla_4.3.0-dev-Development-Full_Package.zip -d 4.3.0
-      - unzip ./Joomla-Packages/Joomla_5.0.0-dev-Development-Full_Package.zip -d 5.0.0
+      - unzip ./Joomla-Packages/Joomla_4.3.0-dev-Development-Full_Package.zip -d /install-dir/4.3.0
 
   - name: test-dpcalendar
     image: joomlaprojects/docker-images:cypress
     environment:
       JOOMLA_INSTALLATION_DISABLE_LOCALHOST_CHECK: 1
     commands:
-      - php 4.3.0/installation/joomla.php install --site-name=extension-test --admin-user=john --admin-username=john-ext --admin-password=lalalal123 --admin-email=john@example.com --db-type=MySQLi --db-host=mysql --db-user=joomla_ut --db-pass=joomla_ut --db-name=test_joomla --db-prefix=et4
+      - php /install-dir/4.3.0/installation/joomla.php install --site-name=extension-test --admin-user=john --admin-username=john-ext --admin-password=lalalal123 --admin-email=john@example.com --db-type=MySQLi --db-host=mysql --db-user=joomla_ut --db-pass=joomla_ut --db-name=test_joomla --db-prefix=et4
 
-
+volumes:
+  - name: install-dir
+    host:
+      path: /tmp/et-install-dir
 
 services:
   - name: mysql
