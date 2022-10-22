@@ -28,8 +28,8 @@ steps:
   - name: extract
     image: joomlaprojects/docker-images:packager
     commands:
-      - unzip ./Joomla-Packages/Joomla_4.3.0-dev-Development-Full_Package.zip 4.3.0
-      - unzip ./Joomla-Packages/Joomla_5.0.0-dev-Development-Full_Package.zip 5.0.0
+      - unzip ./Joomla-Packages/Joomla_4.3.0-dev-Development-Full_Package.zip -d 4.3.0
+      - unzip ./Joomla-Packages/Joomla_5.0.0-dev-Development-Full_Package.zip -d 5.0.0
 
   - name: test-dpcalendar
     image: joomlaprojects/docker-images:cypress
