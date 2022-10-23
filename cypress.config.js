@@ -10,7 +10,7 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {},
     baseUrl: 'http://localhost/',
     specPattern: [
-      'extensions/*.cy.{js,jsx,ts,tsx}'
+      '*.cy.{js,jsx,ts,tsx}'
     ],
     supportFile: 'cypress/support/index.js',
     scrollBehavior: 'center',
