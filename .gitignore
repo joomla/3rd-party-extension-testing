@@ -20,6 +20,14 @@ node_modules/
 Thumbs.db
 Desktop.ini
 
+/install
+!/install/.gitkeep
+
+/packages
+!/packages/.gitkeep
+
+cypress.env.json
+
 # Never ignore
 # Only apply this rule to the main repository's gitignore files
 !/.gitignore

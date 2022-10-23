@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/joomla/3rd-party-extension-testing#readme",
   "devDependencies": {
-    "cypress": "^10.10.0"
+    "cypress": "^10.10.0",
+    "joomla-cypress": "^0.0.15"
   }
 }
