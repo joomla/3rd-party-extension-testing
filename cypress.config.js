@@ -16,7 +16,7 @@ module.exports = defineConfig({
     scrollBehavior: 'center',
     browser: 'firefox',
     screenshotOnRunFailure: true,
-    video: false
+    video: true
   },
   env: {
     sitename: 'extension-test',
