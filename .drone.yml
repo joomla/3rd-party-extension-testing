@@ -58,7 +58,7 @@ steps:
       - cd ..
       - pwd
       - php install/4.3.0/cli/joomla.php extension:install --path packages/dpcalendar.zip --verbose  --version --no-interaction
-      - npx cypress run --config-file "cypress.config.js" --spec "extensions/dpcalendar/tests/default/Installed.cy.js"
+      - npx cypress run --config-file "cypress.config.js" --spec "extensions/dpcalendar/**/*"
 
 volumes:
   - name: cypress-cache
