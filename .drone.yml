@@ -40,7 +40,7 @@ steps:
 
   - name: mysqlhealthcheck
     image: mysql:5.7
-    depends_on: [ n ]
+    depends_on: [ npm ]
     commands:
       - while ! mysqladmin ping -h mysql -u joomla_ut -pjoomla_ut --silent; do sleep 1; done
 
