@@ -16,8 +16,8 @@ steps:
     image: joomlaprojects/docker-images:packager
     depends_on: [ download ]
     commands:
-      - rm -rf install/4.3.0
-      - unzip packages/Joomla_4.3.0-dev-Development-Full_Package.zip -d install/4.3.0
+      - rm -rf tests/www/4.3.0
+      - unzip packages/Joomla_4.3.0-dev-Development-Full_Package.zip -d tests/www/4.3.0
 
   - name: npm
     image: node:16-bullseye-slim
@@ -52,13 +52,13 @@ steps:
       JOOMLA_INSTALLATION_DISABLE_LOCALHOST_CHECK: 1
     commands:
       - apache2ctl -D FOREGROUND &
-      - php install/4.3.0/installation/joomla.php install --site-name=extension-test --admin-user=john --admin-username=john-ext --admin-password=lalalal123lalala --admin-email=john@example.com --db-type=mysqli --db-host=mysql --db-user=joomla_ut --db-pass=joomla_ut --db-name=test_joomla --db-prefix=et4_
+      - php tests/www/4.3.0/installation/joomla.php install --site-name=extension-test --admin-user=john --admin-username=john-ext --admin-password=lalalal123lalala --admin-email=john@example.com --db-type=mysqli --db-host=mysql --db-user=joomla_ut --db-pass=joomla_ut --db-name=test_joomla --db-prefix=et4_
       - cd packages
       - wget -i extensions/dpcalendar/url.txt -O dpcalendar.zip
       - cd ..
       - pwd
-      - php install/4.3.0/cli/joomla.php extension:install --path packages/dpcalendar.zip --verbose  --version --no-interaction
-      - npx cypress run --browser=firefox --e2e --config-file "cypress.config.js" --spec "extensions/dpcalendar/**/*" --config baseUrl=http://localhost/install/4.3.0
+      - php tests/www/4.3.0/cli/joomla.php extension:install --path packages/dpcalendar.zip --verbose  --version --no-interaction
+      - npx cypress run --browser=firefox --e2e --config-file "cypress.config.js" --spec "extensions/dpcalendar/**/*" --config baseUrl=http://localhost/4.3.0
 
 
   - name: artifacts-system-tests
