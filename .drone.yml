@@ -56,7 +56,7 @@ steps:
       - cd packages
       - wget -i extensions/dpcalendar/url.txt -O dpcalendar.zip
       - cd ..
-      - pwd
+      - wait 10
       - php tests/www/4.3.0/cli/joomla.php extension:install --path packages/dpcalendar.zip --verbose  --version --no-interaction
       - npx cypress run --browser=firefox --e2e --config-file "cypress.config.js" --spec "extensions/dpcalendar/**/*" --config baseUrl=http://localhost/4.3.0
 
