@@ -60,6 +60,28 @@ steps:
       - php install/4.3.0/cli/joomla.php extension:install --path packages/dpcalendar.zip --verbose  --version --no-interaction
       - npx cypress run --browser=firefox --e2e --config-file "cypress.config.js" --spec "extensions/dpcalendar/**/*" --config baseUrl=http://localhost/install/4.3.0
 
+
+  - name: artifacts-system-tests
+    image: cschlosser/drone-ftps
+    depends_on: [ test-dpcalendar ]
+    environment:
+      FTP_USERNAME:
+        from_secret: ftpusername
+      FTP_PASSWORD:
+        from_secret: ftppassword
+      PLUGIN_HOSTNAME: ci.joomla.org:21
+      PLUGIN_SRC_DIR: /tests/cypress/output/
+      PLUGIN_DEST_DIR: /artifacts
+      PLUGIN_SECURE: false
+      PLUGIN_EXCLUDE: ^\.git/$
+    commands:
+      - export PLUGIN_DEST_DIR=$PLUGIN_DEST_DIR/$DRONE_REPO/$DRONE_BRANCH/$DRONE_PULL_REQUEST/system-tests/$DRONE_BUILD_NUMBER
+      - echo https://ci.joomla.org$PLUGIN_DEST_DIR
+      - /bin/upload.sh
+    when:
+      status:
+        - failure
+
 volumes:
   - name: cypress-cache
     host:
