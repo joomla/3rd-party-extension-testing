@@ -7,36 +7,34 @@ clone:
 steps:
   - name: download
     image: joomlaprojects/docker-images:packager
-    volumes:
-      - name: packagedir
-        path: /packagedir
     commands:
-      - cd /packagedir
+      - cd /packages
       - wget https://developer.joomla.org/nightlies/Joomla_4.3.0-dev-Development-Full_Package.zip
       - wget https://developer.joomla.org/nightlies/Joomla_5.0.0-dev-Development-Full_Package.zip
 
   - name: extract
     image: joomlaprojects/docker-images:packager
     depends_on: [ download ]
-    volumes:
-      - name: installdir
-        path: /installdir
-      - name: packagedir
-        path: /packagedir
     commands:
-      - rm -rf /installdir/4.3.0
-      - unzip /packagedir/Joomla_4.3.0-dev-Development-Full_Package.zip -d /installdir/4.3.0
+      - rm -rf /install/4.3.0
+      - unzip /packages/Joomla_4.3.0-dev-Development-Full_Package.zip -d /install/4.3.0
 
   - name: npm
     image: node:16-bullseye-slim
     depends_on: [ extract ]
-    volumes:
-      - name: npm-cache
-        path: /tmp/npm-cache
-    environment:
-      npm_config_cache: /tmp/npm-cache
     commands:
       - npm ci --unsafe-perm
+
+  - name: prepare_system_tests
+    depends_on:
+      - npm
+    image: joomlaprojects/docker-images:systemtests
+    volumes:
+      - name: cypress-cache
+        path: /root/.cache/Cypress
+    commands:
+      - npx cypress install
+      - npx cypress verify
 
   - name: mysqlhealthcheck
     image: mysql:5.7
@@ -48,29 +46,22 @@ steps:
     image: joomlaprojects/docker-images:cypress
     depends_on: [ npm ]
     volumes:
-      - name: installdir
-        path: /installdir
-      - name: packagedir
-        path: /packagedir
+      - name: cypress-cache
+        path: /root/.cache/Cypress
     environment:
       JOOMLA_INSTALLATION_DISABLE_LOCALHOST_CHECK: 1
     commands:
-      - php /installdir/4.3.0/installation/joomla.php install --site-name=extension-test --admin-user=john --admin-username=john-ext --admin-password=lalalal123lalala --admin-email=john@example.com --db-type=mysqli --db-host=mysql --db-user=joomla_ut --db-pass=joomla_ut --db-name=test_joomla --db-prefix=et4_
-      - cd /packagedir
+      - php /install/4.3.0/installation/joomla.php install --site-name=extension-test --admin-user=john --admin-username=john-ext --admin-password=lalalal123lalala --admin-email=john@example.com --db-type=mysqli --db-host=mysql --db-user=joomla_ut --db-pass=joomla_ut --db-name=test_joomla --db-prefix=et4_
+      - cd /packages
       - wget -i extensions/dpcalendar/url.txt -O dpcalendar.zip
       - cd ..
-      - php /installdir/4.3.0/cli/joomla.php extension:install --path /packagedir/dpcalendar.zip --verbose  --version --no-interaction
-      - npx cypress run --record --config-file "/cypress.config.js" --spec "extensions/dpcalendar/tests/default/Installed.cy.js"
+      - php /install/4.3.0/cli/joomla.php extension:install --path /packages/dpcalendar.zip --verbose  --version --no-interaction
+      - npx cypress run --record --config-file "cypress.config.js" --spec "extensions/dpcalendar/tests/default/Installed.cy.js"
 
 volumes:
-  - name: installdir
+  - name: cypress-cache
     host:
-      path: /tmp/et-install-dir
-
-  - name: packagedir
-    host:
-      path: /tmp/et-package-dir
-
+      path: /tmp/cypress-cache
 
 services:
   - name: mysql
